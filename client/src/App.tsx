@@ -1,6 +1,5 @@
 import {
   Refine,
-  GitHubBanner,
   WelcomePage,
   Authenticated,
   AuthBindings,
@@ -132,7 +131,6 @@ function App() {
 
   return (
     <BrowserRouter>
-      <GitHubBanner />
       <RefineKbarProvider>
         <ColorModeContextProvider>
           <CssBaseline />
