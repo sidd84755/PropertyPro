@@ -88,9 +88,43 @@ const createProperty = async (req, res) => {
     
 };
 
-const updateProperty = async (req, res) => {};
+const updateProperty = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, description, propertyType, location, price, photo } = req.body;
+        const photoUrl = await cloudinary.uploader.upload(photo);
 
-const deleteProperty = async (req, res) => {};
+        await Property.findByIdAndUpdate({ _id: id }, {
+            title,
+            description,
+            propertyType,
+            location,
+            price,
+            photo: photoUrl.url || photo
+        })
+
+        res.status(200).json({ message: "Property updated successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+const deleteProperty = async (req, res) => {
+    let propertyToDelete;
+    try {
+        const { id } = req.params;
+        propertyToDelete = await Property.findById({ _id: id });
+
+        if (!propertyToDelete) {
+        throw new Error('Property not found');
+        }
+
+        propertyToDelete.deleteOne()
+        res.status(200).json({ message: 'Property deleted successfully', propertyToDelete });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
 
 export {
     getAllProperties,
